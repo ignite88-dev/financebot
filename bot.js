@@ -2485,26 +2485,26 @@ async function deleteGroup(params, chatId) {
 
 // ================= MESSAGE HANDLER =================
 bot.on('message', async (msg) => {
-	if (!msg.chat) return;
-	const isSelfBot = msg.from && msg.from.id === parseInt(bot.token.split(':')[0]);
-	if (msg.from.is_bot && !isSelfBot) {
-		return; // Skip other bots
-	}
-	if (isSelfBot) {
-		console.log('🤖 Processing self-message');
-		// Extract voice prefix
-		if (msg.text && (msg.text.includes('[VOICE]') || msg.text.includes('🎤'))) {
-			// Simulate as user message
-			msg.from = {
-				id: 777888999, // Fake user ID
-				first_name: 'Voice Message',
-				is_bot: false
-			};
-		} else {
-			return; // Skip other self-messages
-		}
-	}
-
+    if (!msg.chat) return;
+    
+    // ========== TAMBAH INI SAJA ==========
+    // ALLOW pesan dari BOT jika mengandung keyword voice
+    if (msg.from && msg.from.is_bot && msg.text) {
+        const voiceKeywords = ['[VOICE]', '🎤', 'Voice:'];
+        const isVoiceMessage = voiceKeywords.some(keyword => 
+            msg.text.includes(keyword)
+        );
+        
+        if (isVoiceMessage) {
+            console.log('🔊 Voice detected: ${msg.text}');
+            // Ubah dari bot jadi user
+            msg.from.is_bot = false;
+            msg.from.first_name = 'Voice Message';
+            msg.from.id = 777888999;
+        } else {
+            return; // Skip bot messages biasa
+        }
+    }
 
 	const chatId = msg.chat.id;
 	const userId = msg.from.id;
