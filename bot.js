@@ -2298,7 +2298,7 @@ async function deleteGroup(params, chatId) {
 
 // ================= MESSAGE HANDLER =================
 bot.on('message', async (msg) => {
-    if (!msg.chat || msg.from.is_bot) return;
+    if (!msg.chat) return;
     
     const chatId = msg.chat.id;
     const userId = msg.from.id;
@@ -3345,3 +3345,4 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // ================= START BOT =================
 startBot();
+
